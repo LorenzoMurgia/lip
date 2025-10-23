@@ -1,0 +1,36 @@
+exception NoRuleApplies
+;;
+
+type boolExpr =
+    True
+  | False
+  | Not of boolExpr
+  | And of boolExpr * boolExpr
+  | Or of boolExpr * boolExpr
+  | If of boolExpr * boolExpr * boolExpr
+;;
+
+let rec eval e =
+  match e with
+  | True -> true
+  | False -> false
+  | If (e1, e2, e3) -> 
+      if eval e1 then eval e2 else eval e3
+  | Not (e) -> not (eval e)
+  | And (e1, e2) -> eval e1 && eval e2
+  | Or (e1, e2) -> eval e1 || eval e2
+;;  
+
+let rec trace1 e = match e with
+  | If (True, e1, e2) -> e1
+  | If (False, e1, e2) -> e2
+  | If (e1, e2, e3) -> If(trace1 e1, e2, e3)
+  | And (True, e1) -> e1
+  | And (False, e1) -> False
+  | And (e1, e2) -> And(trace1 e1, e2)
+  | Or (True, e1) -> True
+  | Or (False, e1) -> e1
+  | Or (e1, e2) -> Or(trace1 e1, e2)
+  | Not (e) -> Not(trace1 e)
+  | _ -> raise NoRuleApplies
+;;

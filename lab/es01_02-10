@@ -1,0 +1,15 @@
+(*Big-step semantics*)
+
+type boolExpr = 
+  True
+  | False
+  | If of boolExpr * boolExpr * boolExpr
+;;
+
+let rec eval e =
+  match e with
+  | True -> true
+  | False -> false
+  | If (e1, e2, e3) ->
+      if eval e1 then eval e2 else eval e3
+;;              

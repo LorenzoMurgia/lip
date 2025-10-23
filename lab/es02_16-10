@@ -1,0 +1,29 @@
+exception NoRuleApplies
+;;
+
+type boolExpr = 
+  True
+  | False
+  | If of boolExpr * boolExpr * boolExpr
+;;
+
+let rec trace1 e = match e with
+  | If (True, e1, e2) -> e1
+  | If (False, e1, e2) -> e2
+  | If (e1, e2, e3) -> If(trace1 e1, e2, e3)
+  | _ -> raise NoRuleApplies
+;;
+
+(*Trace con lista di tutti i passaggi*)
+let rec trace e = try
+  let e' = trace1 e
+  in e::(trace e')
+with NoRuleApplies -> [e]
+;;
+
+(*Solo risultato della trace*)
+let rec trace e = try
+  let e' = trace1 e
+  in trace e'
+with NoRuleApplies -> [e]
+;;

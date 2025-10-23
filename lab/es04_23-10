@@ -1,0 +1,49 @@
+exception TypeError of string
+;;
+
+exception NoRuleApplies
+;;
+
+type expr =
+    True
+  | False
+  | Not of expr
+  | And of expr * expr
+  | Or of expr * expr
+  | If of expr * expr * expr
+  | Zero
+  | Succ of expr
+  | Pred of expr
+  | IsZero of expr
+;;
+  
+type exprtype = BoolT | NatT
+;;
+
+let rec typecheck e = match e with
+  | True -> BoolT
+  | False -> BoolT
+  | Zero -> NatT
+  | Succ(e1) -> (match typecheck e1 with
+              | NatT -> NatT
+              | _ -> raise (TypeError "succ expects a Nat argument"))
+  | Pred(e1) -> (match typecheck e1 with
+              | NatT -> NatT
+              | BoolT -> raise (TypeError "pred expects a Nat argument"))
+  | IsZero(e1) -> (match typecheck e1 with
+              | NatT -> BoolT
+              | BoolT -> raise (TypeError "iszero expects a Nat argument"))
+  | Not(e1) -> (match typecheck e1 with
+              | BoolT -> BoolT
+              | NatT -> raise (TypeError "not expects a Bool argument"))
+  | And(e1, e2) -> (match typecheck e1, typecheck e2 with
+              | BoolT, BoolT -> BoolT
+              | t1, t2 -> raise (TypeError "and expects a Bool argument"))
+  | Or(e1, e2) -> (match typecheck e1, typecheck e2 with
+              | BoolT, BoolT -> BoolT
+              | t1, t2 -> raise (TypeError "or expects a Bool argument"))
+  | If(e1, e2, e3) -> (match typecheck e1, typecheck e2, typecheck e3 with
+              | BoolT, t2, t3 when t2 = t3 -> t3
+              | BoolT, t2, t3 -> raise (TypeError "branches of if must have the same type")
+              | NatT, _, _ -> raise (TypeError "if expects a Bool condition"))
+;;
