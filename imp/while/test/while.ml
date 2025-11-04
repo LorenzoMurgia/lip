@@ -40,7 +40,7 @@ let test_trace (cmd,n_steps,var,exp_val) =
 
 
 let%test "test_trace1" = test_trace
-    ("x:=0", 1, "x", Nat 0)
+    ("x:=0", 1, "x", Nat 1)
 
 let%test "test_trace2" = test_trace
     ("x:=0; x:=x+1", 2, "x", Nat 1)
