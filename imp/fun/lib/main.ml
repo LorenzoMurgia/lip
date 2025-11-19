@@ -1,3 +1,6 @@
+open Ast
+open Types
+
 (* Funzione ausiliaria per leggere il valore di una variabile.
    1. 'topenv st x' cerca l'identificatore x nell'ambiente in cima allo stack (scope corrente).
    2. Se è una variabile (IVar l), usa 'getmem' per leggere il valore intero alla locazione l. *)
