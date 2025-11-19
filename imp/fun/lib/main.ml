@@ -28,7 +28,7 @@ let botmem = fun l -> failwith ("location " ^ string_of_int l ^ " undefined")
     
 (* Funzione per aggiornare un ambiente o una memoria (binding).
    Restituisce una nuova funzione che mappa x a v, e lascia invariati gli altri input. *)
-let bind f x v = fun y -> if y=x then v else f y
+let bind f x v = fun y -> if y = x then v else f y
 
 (* Predicato che determina se un'espressione è un "valore" (forma normale irriducibile).
    True, False e le costanti numeriche sono valori. *)
